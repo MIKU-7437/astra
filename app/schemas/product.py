@@ -14,6 +14,8 @@ class Product(BaseModel):
     created_date: datetime
     modified_date: datetime
     photo: str | None
+    created_date: datetime
+    modified_date: datetime
 
     category: "Category"
 

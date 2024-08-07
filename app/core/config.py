@@ -40,50 +40,6 @@ class PostgresDatabaseConfig:
     POSTGRES_POOL: int = env_settings.POSTGRES_POOL
 
 
-    @property
-    def async_url(self) -> str:
-        return f"postgresql+asyncpg://{self.POSTGRES_USER}:{self.POSTGRES_PASS}@{self.POSTGRES_HOST}:{self.POSTGRES_PORT}/{self.POSTGRES_NAME}"
-
-    @property
-    def sync_url(self) -> str:
-        return f"postgresql://{self.POSTGRES_USER}:{self.POSTGRES_PASS}@{self.POSTGRES_HOST}:{self.POSTGRES_PORT}/{self.POSTGRES_NAME}"
-
-    @property
-    def async_engine(self):
-        return create_async_engine(
-            url=self.async_url,
-            echo=self.POSTGRES_ECHO,
-            future=True,
-            pool_size=self.POSTGRES_POOL,
-            pool_pre_ping=True,
-            pool_timeout=60,
-        )
-
-    @property
-    def async_session(self):
-        return async_sessionmaker(
-            self.async_engine,
-            expire_on_commit=False,
-            autocommit=False
-        )
-
-    @property
-    def sync_engine(self):
-        return create_engine(
-            url=self.sync_url,
-            echo=False
-        )
-
-    @property
-    def sync_session(self):
-        return sessionmaker(
-            self.sync_engine,
-            expire_on_commit=False,
-            autocommit=False
-        )
-
-
-
 # @dataclass
 # class JWTConfig:
 #     SECRET_KEY: str = env_settings.JWT_SECRET_KEY
