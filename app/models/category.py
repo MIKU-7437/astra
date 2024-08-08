@@ -1,8 +1,8 @@
-from sqlalchemy import Table, ForeignKey, BigInteger, Column, String, Integer, Boolean, DateTime
+from sqlalchemy import Table, ForeignKey, Column, String, Integer, Boolean, DateTime
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from typing import List
-from datetime import datetime, timedelta
+from typing import List, Optional
+from datetime import datetime
 
 from app.core.database import Base
 
@@ -21,7 +21,7 @@ class Category(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     title: Mapped[str] = mapped_column(String, nullable=False)
     slug: Mapped[str] = mapped_column(String, nullable=False)
-    description: Mapped[str] = mapped_column(String)
+    description: Mapped[Optional[str]] = mapped_column(String)
     is_subcategory: Mapped[bool] = mapped_column(Boolean, default=False)
     created_date: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
     modified_date: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
@@ -32,7 +32,7 @@ class Category(Base):
         primaryjoin=id == category_links.c.top_category_id,
         secondaryjoin=id == category_links.c.sub_category_id,
         back_populates='top_categories',
-        viewonly=True
+        viewonly=True,
     )
     top_categories: Mapped[List["Category"]] = relationship(
         'Category',
@@ -40,5 +40,11 @@ class Category(Base):
         primaryjoin=id == category_links.c.sub_category_id,
         secondaryjoin=id == category_links.c.top_category_id,
         back_populates='sub_categories',
-        viewonly=True
+        viewonly=True,
     )
+    products: Mapped[List["Product"]] = relationship(
+        "Product",
+        back_populates='category',
+    )
+
+

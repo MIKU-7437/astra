@@ -6,11 +6,15 @@ class Category(BaseModel):
     id: int
     title: str
     slug: str
-    description: str
+    description: Optional[str]
     is_subcategory: bool
     created_date: datetime
     modified_date: datetime
-    
-    top_categories: List["Category"]
-    sub_categories: List["Category"]
-    products = List["Product"] | None
+
+    top_categories: Optional[List["Category"]]
+    sub_categories: Optional[List["Category"]]
+    products: Optional[List[Product]]
+
+    class Config:
+        orm_mode = True
+
