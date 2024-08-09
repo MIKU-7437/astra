@@ -1,30 +1,25 @@
-from sqlalchemy import Table, ForeignKey, Column, String, Integer, Boolean, DateTime
+from sqlalchemy import Table, ForeignKey, Column, String, Integer, Boolean, DateTime, UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from typing import List, Optional
 from datetime import datetime
 
-from app.core.database import Base
+from app.models.base import Base, IdMixin, TimestampMixin, NameDescriptiveMixin
+
 
 
 category_links = Table(
     'category_links',
     Base.metadata,
-    Column('top_category_id', Integer, ForeignKey('category.id'), primary_key=True),
-    Column('sub_category_id', Integer, ForeignKey('category.id'), primary_key=True)
+    Column('top_category_id', UUID, ForeignKey('category.id'), primary_key=True),
+    Column('sub_category_id', UUID, ForeignKey('category.id'), primary_key=True)
 )
 
 
-class Category(Base):
+class Category(Base, IdMixin, TimestampMixin, NameDescriptiveMixin):
     __tablename__ = 'category'
 
-    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
-    title: Mapped[str] = mapped_column(String, nullable=False)
-    slug: Mapped[str] = mapped_column(String, nullable=False)
-    description: Mapped[Optional[str]] = mapped_column(String)
     is_subcategory: Mapped[bool] = mapped_column(Boolean, default=False)
-    created_date: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
-    modified_date: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     sub_categories: Mapped[List["Category"]] = relationship(
         'Category',
@@ -46,5 +41,6 @@ class Category(Base):
         "Product",
         back_populates='category',
     )
+
 
 

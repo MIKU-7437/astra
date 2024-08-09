@@ -4,9 +4,11 @@ from sqlalchemy import pool
 from sqlalchemy.ext.asyncio import AsyncEngine, create_async_engine
 from alembic import context
 
-from app.core.database import Base, sync_url, async_url  # Импортируйте Base и settings из вашего проекта
+from app.core.database import sync_url, async_url
+from app.models.base import Base
 # Импортируйте ваши модели
 from app.models.category import Category, category_links
+from app.models.product import Product
 
 config = context.config
 
@@ -14,6 +16,7 @@ if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
 target_metadata = Base.metadata
+
 
 
 def run_migrations_offline() -> None:
