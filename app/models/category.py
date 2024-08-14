@@ -1,46 +1,43 @@
-from sqlalchemy import Table, ForeignKey, Column, String, Integer, Boolean, DateTime, UUID
-from sqlalchemy.orm import Mapped, mapped_column, relationship
-
+from sqlalchemy import Table, ForeignKey, Column, Boolean, UUID, Integer
+from sqlalchemy.orm import Mapped, mapped_column, relationship, foreign, remote
 from typing import List, Optional
-from datetime import datetime
-
 from app.models.base import Base, IdMixin, TimestampMixin, NameDescriptiveMixin
-
-
 
 category_links = Table(
     'category_links',
     Base.metadata,
-    Column('top_category_id', UUID, ForeignKey('category.id'), primary_key=True),
-    Column('sub_category_id', UUID, ForeignKey('category.id'), primary_key=True)
+    Column('top_category_id', UUID  , ForeignKey('categories.id'), primary_key=True),
+    Column('sub_category_id', UUID, ForeignKey('categories.id'), primary_key=True)
 )
 
 
+
 class Category(Base, IdMixin, TimestampMixin, NameDescriptiveMixin):
-    __tablename__ = 'category'
+    __tablename__ = 'categories'
 
-    is_subcategory: Mapped[bool] = mapped_column(Boolean, default=False)
+    # Additional fields specific to Category
+    is_subcategory = Column(Boolean, default=False)
 
-    sub_categories: Mapped[List["Category"]] = relationship(
-        'Category',
+    # Relationship for subcategories
+    sub_categories = relationship(
+        "Category",
         secondary=category_links,
-        primaryjoin=id == category_links.c.top_category_id,
-        secondaryjoin=id == category_links.c.sub_category_id,
-        back_populates='top_categories',
-        viewonly=True,
+        primaryjoin="Category.id == category_links.c.top_category_id",
+        secondaryjoin="Category.id == category_links.c.sub_category_id",
+        back_populates="top_categories"
     )
-    top_categories: Mapped[List["Category"]] = relationship(
-        'Category',
+
+    # Relationship for top categories
+    top_categories = relationship(
+        "Category",
         secondary=category_links,
-        primaryjoin=id == category_links.c.sub_category_id,
-        secondaryjoin=id == category_links.c.top_category_id,
-        back_populates='sub_categories',
-        viewonly=True,
-    )
-    products: Mapped[List["Product"]] = relationship(
-        "Product",
-        back_populates='category',
+        primaryjoin="Category.id == category_links.c.sub_category_id",
+        secondaryjoin="Category.id == category_links.c.top_category_id",
+        back_populates="sub_categories"
     )
 
+    # Relationship for products (assuming Product model exists)
+    products = relationship("Product", back_populates="category")
 
-
+    def __str__(self):
+        return self.title  # Assuming NameDescriptiveMixin has a `name` attribute
