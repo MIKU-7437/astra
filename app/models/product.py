@@ -19,7 +19,7 @@ class Product(Base, IdMixin, TimestampMixin, NameDescriptiveMixin):
     # Corrected ForeignKey reference
     category_id: Mapped[UUID] = mapped_column(ForeignKey('categories.id'), nullable=False)
 
-    category: Mapped["Category"] = relationship(
+    category: Mapped['Category'] = relationship(
         "Category",
         back_populates="products",
     )

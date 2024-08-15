@@ -1,6 +1,13 @@
 from pydantic import BaseModel
 from typing import List, Optional
 from datetime import datetime
+class Category(BaseModel):
+    id: int
+    name: str
+    description: Optional[str]
+
+    class Config:
+        orm_mode = True
 
 class Product(BaseModel):
     id: int
@@ -15,6 +22,14 @@ class Product(BaseModel):
     photo: Optional[str]
 
     category: "Category"
+
+    class Config:
+        orm_mode = True
+
+
+
+class ProductListResponse(BaseModel):
+    products: List[Product]
 
     class Config:
         orm_mode = True

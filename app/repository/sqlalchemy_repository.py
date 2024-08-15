@@ -14,7 +14,7 @@ UpdateSchemaType = TypeVar("UpdateSchemaType", bound=Optional[BaseModel])
 
 
 
-class SqlAlchemyRepository(AbstractRepository, Generic[ModelType, CreatedSchemaType, UpdateSchemaType]):
+class SqlAlchemyRepository(AbstractRepository, Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
 
     def __init__(self, model: Type[ModelType], db_session: AsyncSession):
         self._session_factory = db_session

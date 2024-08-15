@@ -1,31 +1,28 @@
 from abc import ABC, abstractmethod
 
-from sqlalchemy import insert, create, delete, update, select
+# from sqlalchemy import insert, create, delete, update, select
 
-from app.settings.database import async_url
+from app.core.database import async_url
+
+
+from abc import ABC, abstractmethod
 
 
 class AbstractRepository(ABC):
-    @abstractmethod
-    async def add_one(self, **kwargs):
-        raise NotImplementedError
-
 
     @abstractmethod
-    async def get_one(self, **kwargs):
+    async def create(self, **kwargs):
         raise NotImplementedError
-
 
     @abstractmethod
-    async def edit_one(self, **kwargs):
+    async def update(self, **kwargs):
         raise NotImplementedError
-
 
     @abstractmethod
-    async def delete_one(self, **kwargs):
+    async def delete(self, **kwargs):
         raise NotImplementedError
-
 
     @abstractmethod
-    async def get_all(self, **kwargs):
+    async def get_single(self, **kwargs):
         raise NotImplementedError
+
