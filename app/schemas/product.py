@@ -1,35 +1,26 @@
 from pydantic import BaseModel
 from typing import List, Optional
 from datetime import datetime
-class Category(BaseModel):
-    id: int
-    name: str
-    description: Optional[str]
+from uuid import UUID
 
-    class Config:
-        orm_mode = True
+from .base_schema import Base
+from .category import CategoryOfProduct
 
-class Product(BaseModel):
-    id: int
+class Product(Base):
+    id: UUID
     title: str
     slug: str
     description: Optional[str]
     price: int
     is_available: bool
     stock: int
-    created_date: datetime
-    modified_date: datetime
+    created_at: Optional[datetime]
+    updated_at: Optional[datetime]
     photo: Optional[str]
 
-    category: "Category"
-
-    class Config:
-        orm_mode = True
+    category: "CategoryOfProduct"
 
 
-
-class ProductListResponse(BaseModel):
+class ProductListResponse(Base):
     products: List[Product]
 
-    class Config:
-        orm_mode = True

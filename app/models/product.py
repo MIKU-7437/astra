@@ -6,6 +6,7 @@ from uuid import UUID
 from datetime import datetime
 
 from app.models.base import Base, IdMixin, TimestampMixin, NameDescriptiveMixin
+from .category import Category
 
 
 class Product(Base, IdMixin, TimestampMixin, NameDescriptiveMixin):
@@ -19,7 +20,7 @@ class Product(Base, IdMixin, TimestampMixin, NameDescriptiveMixin):
     # Corrected ForeignKey reference
     category_id: Mapped[UUID] = mapped_column(ForeignKey('categories.id'), nullable=False)
 
-    category: Mapped['Category'] = relationship(
-        "Category",
+    category: Mapped[Category] = relationship(
+        Category,
         back_populates="products",
     )

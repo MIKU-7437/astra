@@ -14,6 +14,8 @@ class ProductService(BaseService):
         return Product.from_orm(product)
 
 
+    
     async def get_product_list(self) -> List[Product]:
-        product = await self.repository.get_multi()
-        return Product.from_orm(product)
+        products = await self.repository.get_multi()
+        return [Product.from_orm(product) for product in products]
+

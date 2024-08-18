@@ -6,7 +6,7 @@ from typing import List
 # Если схемы не нужны, лучше не указывать None.
 # В данном случае стоит изменить SqlAlchemyRepository, чтобы работать только с ModelType
 
-class ProductRepository(SqlAlchemyRepository[Product, None, None]):
+class ProductRepository(SqlAlchemyRepository[Product]):
     async def get_all(self, limit: int = 100, offset: int = 0) -> List[Product]:
         async with self._session_factory() as session:
             stmt = select(self.model).limit(limit).offset(offset)
@@ -18,7 +18,7 @@ from typing import List
 # Если схемы не нужны, лучше не указывать None.
 # В данном случае стоит изменить SqlAlchemyRepository, чтобы работать только с ModelType
 
-class ProductRepository(SqlAlchemyRepository[Product, None, None]):
+class ProductRepository(SqlAlchemyRepository[Product]):
     async def get_all(self, limit: int = 100, offset: int = 0) -> List[Product]:
         async with self._session_factory() as session:
             stmt = select(self.model).limit(limit).offset(offset)
