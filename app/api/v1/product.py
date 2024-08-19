@@ -2,40 +2,38 @@
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Query
+from sqlalchemy.orm import Session
 
 from app.repository.product import ProductRepository
+from app.repository.product2 import ProductRepository as Product2Repository
 from app.services.product import ProductService
 from app.schemas.product import Product, ProductListResponse
-from app.core.database import async_session
+from app.core.database import async_session, get_async_session, sync_engine
 
 router = APIRouter(
     prefix="/products",
     tags=["products"],
 )
+from sqlalchemy.orm import sessionmaker
 
-# Зависимость для получения сервиса с репозиторием
-def get_product_service(db: AsyncSession = Depends(async_session)):
-    repository = ProductRepository(Product, db)
-    return ProductService(repository)
+
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=sync_engine)
+
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
 
 @router.get(
     '/list',
     response_model=ProductListResponse,
     status_code=status.HTTP_200_OK,
 )
-async def get_products(service: ProductService = Depends(get_product_service)):
+async def list():
+    service = ProductService(ProductRepository())
     products = await service.get_product_list()
     return ProductListResponse(products=products)
-
-
-@router.get(
-    '/{product_id}',
-    response_model=Product,
-    status_code=status.HTTP_200_OK,
-)
-async def get_product(product_id: int, service: ProductService = Depends(get_product_service)):
-    product = await service.get_product(product_id)
-    if not product:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Product not found")
-    return product

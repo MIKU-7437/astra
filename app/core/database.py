@@ -1,7 +1,7 @@
 from app.core.config import settings
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
+from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
 from sqlalchemy.orm import declarative_base
 
 
@@ -15,6 +15,7 @@ POSTGRES_POOL = settings.pg_database.POSTGRES_POOL
 
 
 async_url = f"postgresql+asyncpg://{POSTGRES_USER}:{POSTGRES_PASS}@{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_NAME}"
+
 
 async_engine = create_async_engine(
     url=async_url,
@@ -30,6 +31,12 @@ async_session = async_sessionmaker(
     expire_on_commit=False,
     autocommit=False
 )
+
+async def get_async_session() -> AsyncSession:
+    async with async_session() as session:
+        yield session
+        await session.commit()
+
 
 sync_url = f"postgresql://{POSTGRES_USER}:{POSTGRES_PASS}@{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_NAME}"
 
