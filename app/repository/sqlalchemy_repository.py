@@ -4,9 +4,9 @@ from sqlalchemy import delete, select, update, insert
 from sqlalchemy.orm import joinedload
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from .base_repository import AbstractRepository
-from ..core.database import async_session
-from ..schemas.base_schema import Base
+from app.repository.base_repository import AbstractRepository
+from app.core.database import async_session
+from app.schemas.base_schema import Base
 
 
 ModelType = TypeVar("ModelType", bound=Base)

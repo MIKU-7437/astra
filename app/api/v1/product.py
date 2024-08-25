@@ -6,7 +6,7 @@ from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session
 
 from app.repository.product import ProductRepository
-from app.repository.product2 import ProductRepository as Product2Repository
+#from app.repository.product2 import ProductRepository as Product2Repository
 from app.services.product import ProductService
 from app.schemas.product import Product, ProductListResponse
 from app.core.database import async_session, get_async_session, sync_engine

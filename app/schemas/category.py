@@ -24,3 +24,9 @@ class CategoryOfProduct(Base):
     title: str
     slug: str
     description: Optional[str]
+
+
+class SubCategoryTree(Base):
+    title: str
+    slug: str
+    sub_categories: Optional[List["SubCategoryTree"] | "SubCategoryTree"]
